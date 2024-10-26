@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://unpkg.com/konva@9.3.15/konva.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PixelBattle</title>
+</head>
+
+<body>
+    <div class="palette">
+        <div>
+            <div class="palette-color violet"></div>
+            <div class="palette-color blue"></div>
+            <div class="palette-color green"></div>
+            <div class="palette-color yellow"></div>
+            <div class="palette-color orange"></div>
+            <div class="palette-color red"></div>
+            <div class="palette-color white"></div>
+            <div class="palette-color black"></div>
+        </div>
+    </div>
+    <div id="container"></div>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #2b2b2b;
+        }
+
+        .palette {
+            position: fixed;
+            bottom: 10px;
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .palette>div {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .palette-color {
+            margin: 2px 0 2px 8px;
+            width: 35px;
+            height: 35px;
+            border-radius: 50px;
+        }
+
+        .palette-color:first-child {
+            margin-left: 0;
+        }
+
+        .palette-color:hover {
+            border: 2px solid white
+        }
+
+        .violet {
+            background-color: violet;
+        }
+        .blue {
+            background-color: blue;
+        }
+        .green {
+            background-color: green;
+        }
+        .yellow {
+            background-color: yellow;
+        }
+        .orange {
+            background-color: orange;
+        }
+        .red {
+            background-color: red;
+        }
+        .white {
+            background-color: white;
+        }
+        .black {
+            background-color: black;
+        }
+    </style>
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
