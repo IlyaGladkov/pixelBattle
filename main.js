@@ -16,12 +16,20 @@ const stage = new Konva.Stage({
   draggable: true
 })
 
+stage.addEventListener('mousedown', function() {
+  document.body.style.cursor = 'grab'
+})
+
+stage.addEventListener('mouseup', function() {
+  document.body.style.cursor = 'default'
+})
+
 const layer = new Konva.Layer()
 
 let matrix = new Konva.Group({
   x: width / 2.2,
   y: height / 2.5,
-  offset: {x: NUMBER_CELLS / SIZE_CELL,y: NUMBER_CELLS / SIZE_CELL}
+  offset: {x: NUMBER_CELLS / 2,y: NUMBER_CELLS / 2}
 })
 
 for (let { x, y, color } of createMatrix(SIZE_CELL, 150)) {
@@ -57,8 +65,8 @@ stage.addEventListener('wheel', function (e) {
 
   scale += e.deltaY * -0.05
 
-  if (scale <= 1) {
-    scale = 1
+  if (scale <= 0.125) {
+    scale = 0.125
   }
 
   matrix.scale({
