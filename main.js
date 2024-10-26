@@ -6,6 +6,8 @@ const SIZE_CELL = 10
 const STROKE_WIDTH = 1
 const NUMBER_CELLS = 150
 
+let pickedColor = 'violet'
+
 const stage = new Konva.Stage({
   container: 'container',
   width: width,
@@ -32,7 +34,7 @@ for (let { x, y, color } of createMatrix(SIZE_CELL, 150)) {
   })
 
   newCell.addEventListener('click', function () {
-    this.fill('red')
+    this.fill(pickedColor)
   })
 
   newCell.addEventListener('mouseover', function () {
@@ -63,6 +65,11 @@ stage.addEventListener('wheel', function (e) {
     x: scale,
     y: scale
   })
+})
+
+let palette = document.querySelector('.palette')
+palette.addEventListener('click', function(e) {
+  pickedColor = e.target.dataset.color
 })
 
 layer.add(matrix)
