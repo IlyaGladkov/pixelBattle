@@ -3,10 +3,10 @@ import createMatrix from "./createMatrix.js"
 const width = window.innerWidth
 const height = window.innerHeight
 const SIZE_CELL = 10
-const STROKE_WIDTH = 1
+const STROKE_WIDTH = 0.5
 const NUMBER_CELLS = 150
 
-let pickedColor = 'violet'
+let pickedColor = null
 
 const stage = new Konva.Stage({
   container: 'container',
@@ -42,7 +42,7 @@ for (let { x, y, color } of createMatrix(SIZE_CELL, 150)) {
   })
 
   newCell.addEventListener('click', function () {
-    this.fill(pickedColor)
+    if (pickedColor) this.fill(pickedColor)
   })
 
   newCell.addEventListener('mouseover', function () {
@@ -65,9 +65,7 @@ stage.addEventListener('wheel', function (e) {
 
   scale += e.deltaY * -0.05
 
-  if (scale <= 0.125) {
-    scale = 0.125
-  }
+  if (scale <= 0.125) scale = 0.125
 
   matrix.scale({
     x: scale,
@@ -76,8 +74,13 @@ stage.addEventListener('wheel', function (e) {
 })
 
 let palette = document.querySelector('.palette')
+let paletteColor = document.querySelectorAll('.palette-color') 
 palette.addEventListener('click', function(e) {
   pickedColor = e.target.dataset.color
+  for (let item of paletteColor) {
+    item.classList.remove('active')
+  }
+  e.target.classList.add('active')
 })
 
 layer.add(matrix)
