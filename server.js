@@ -1,17 +1,34 @@
-const express = require("express")
 const fs = require('fs')
 
-const app = express()
+var express = require('express');
+var app = express();
 
-app.use(express.static('public'));
+var expressWs = require('express-ws')(app);
 
-app.get('/', async (req, res) => {
-    try {
-		let data = await fs.promises.readFile('index.html', 'utf8');
+app.use(function (req, res, next) {
+	req.testing = 'testing';
+	return next();
+});
+
+app.use(express.static('public'))
+
+app.get('/', async function (req, res, next) {
+	console.log('get route', req.testing);
+	try {
+		let data = await fs.promises.readFile('index.html', 'utf8')
 		res.send(data)
 	} catch (err) {
-		console.log('что-то пошло не так');
+		console.log('что-то пошло не так')
 	}
-})
+	res.end();
+});
 
-app.listen(3000, () => console.log("Server started"))
+app.ws('/', function (ws, req) {
+	ws.on('message', function (msg) {
+		ws.send('hello')
+		console.log(msg);
+	});
+	console.log('socket', req.testing);
+});
+
+app.listen(3000);
