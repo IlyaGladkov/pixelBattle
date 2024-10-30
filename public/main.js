@@ -1,5 +1,3 @@
-import createMatrix from "./createMatrix.js"
-
 const width = window.innerWidth
 const height = window.innerHeight
 const SIZE_CELL = 10
@@ -8,11 +6,12 @@ const NUMBER_CELLS = 150
 
 let pickedColor = null
 
+// creation stage and layer
 const stage = new Konva.Stage({
   container: 'container',
   width: width,
   height: height,
-  scale: { x: 1, y: 1 },
+  scale: { x: 0.5, y: 0.5 },
   draggable: true
 })
 
@@ -27,43 +26,62 @@ stage.addEventListener('mouseup', function () {
 const layer = new Konva.Layer()
 
 let matrix = new Konva.Group({
-  x: width / 2.2,
-  y: height / 2.5,
+  x: width / 1.3,
+  y: height / 2,
   offset: { x: NUMBER_CELLS / 2, y: NUMBER_CELLS / 2 }
 })
 
-for (let { x, y, color } of createMatrix(SIZE_CELL, 150)) {
-  let newCell = new Konva.Rect({
-    x: x,
-    y: y,
-    width: SIZE_CELL - STROKE_WIDTH,
-    height: SIZE_CELL - STROKE_WIDTH,
-    fill: color
-  })
+// WebSocket 
+let socket = new WebSocket("ws://localhost:3000")
 
-  newCell.addEventListener('click', function () {
-    if (pickedColor) this.fill(pickedColor)
-  })
-
-  newCell.addEventListener('mouseover', function () {
-    this.stroke('white');
-    this.strokeWidth(STROKE_WIDTH);
-  })
-
-  newCell.addEventListener('mouseout', function () {
-    this.stroke('');
-    this.strokeWidth(0);
-  })
-
-  matrix.add(newCell)
+socket.onopen = function () {
+    console.log('Start')
 }
 
+socket.onclose = function (event) {
+    if (event.wasClean) {
+        alert('Соединение закрыто чисто')
+    } else {
+        alert('Обрыв соединения')
+    }
+    alert('Код: ' + event.code + ' причина: ' + event.reason)
+}
+
+socket.onmessage = function(event) {
+  for (let { x, y, color } of JSON.parse(event.data).cells) {
+    let newCell = new Konva.Rect({
+      x: x,
+      y: y,
+      width: SIZE_CELL - STROKE_WIDTH,
+      height: SIZE_CELL - STROKE_WIDTH,
+      fill: color
+    })
+  
+    newCell.addEventListener('click', function () {
+      if (pickedColor) this.fill(pickedColor)
+    })
+  
+    newCell.addEventListener('mouseover', function () {
+      this.stroke('white');
+      this.strokeWidth(STROKE_WIDTH);
+    })
+  
+    newCell.addEventListener('mouseout', function () {
+      this.stroke('');
+      this.strokeWidth(0);
+    })
+  
+    matrix.add(newCell)
+  }
+}
+
+//create matrix with konva
 let scale = 1
 
 stage.addEventListener('wheel', function (e) {
   e.preventDefault()
 
-  scale += e.deltaY * -0.05
+  scale += e.deltaY * -0.01
 
   if (scale <= 0.125) scale = 0.125
 
