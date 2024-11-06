@@ -48,7 +48,10 @@ socket.onclose = function (event) {
 }
 
 socket.onmessage = function(event) {
-  for (let { x, y, color } of JSON.parse(event.data).cells) {
+  let dataMatrix = JSON.parse(event.data).cells
+  console.log(dataMatrix)
+
+  for (let { x, y, color } of dataMatrix) {
     let newCell = new Konva.Rect({
       x: x,
       y: y,
@@ -59,6 +62,12 @@ socket.onmessage = function(event) {
   
     newCell.addEventListener('click', function () {
       if (pickedColor) this.fill(pickedColor)
+      
+      socket.send(JSON.stringify({
+        x: this.attrs.x,
+        y: this.attrs.y,
+        color: pickedColor
+      }))
     })
   
     newCell.addEventListener('mouseover', function () {

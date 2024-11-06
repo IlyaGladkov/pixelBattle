@@ -45,7 +45,7 @@ function createMatrix(sizeCell, sizeMatrix) {
             let cell = {
                 x: lastX,
                 y: lastY,
-                color: PIXELS_COLOR[Math.floor(Math.random() * 7)]
+                color: 'white'
             }
             matrix.cells.push(cell)
             if (lastX < sizeMatrix - sizeCell) {
@@ -60,8 +60,19 @@ function createMatrix(sizeCell, sizeMatrix) {
     return matrix
 }
 
+let defaultMatrix = createMatrix(SIZE_CELL, NUMBER_CELLS)
+
 app.ws('/', function (ws, req) {
-	ws.send(JSON.stringify(createMatrix(SIZE_CELL, NUMBER_CELLS)))
+	ws.on('message', function(msg) {
+		let pickedPixel = JSON.parse(msg)
+
+		for (let {x, y, color} of defaultMatrix.cells) {
+			if (x === pickedPixel.x && y === pickedPixel.y) {
+				color = pickedPixel.color
+			}
+		}
+	})
+	ws.send(JSON.stringify(defaultMatrix))
 });
 
 app.listen(3000);
