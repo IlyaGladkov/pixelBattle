@@ -66,11 +66,15 @@ app.ws('/', function (ws, req) {
 	ws.on('message', function(msg) {
 		let pickedPixel = JSON.parse(msg)
 
-		for (let {x, y, color} of defaultMatrix.cells) {
-			if (x === pickedPixel.x && y === pickedPixel.y) {
-				color = pickedPixel.color
+		defaultMatrix.cells = defaultMatrix.cells.map((cell) => {
+			if (cell.x === pickedPixel.x && cell.y === pickedPixel.y) {
+				return {
+					...cell,
+					color: pickedPixel.color
+				}
 			}
-		}
+			return cell
+		})
 	})
 	ws.send(JSON.stringify(defaultMatrix))
 });

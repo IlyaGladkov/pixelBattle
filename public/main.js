@@ -49,8 +49,6 @@ socket.onclose = function (event) {
 
 socket.onmessage = function(event) {
   let dataMatrix = JSON.parse(event.data).cells
-  console.log(dataMatrix)
-
   for (let { x, y, color } of dataMatrix) {
     let newCell = new Konva.Rect({
       x: x,
