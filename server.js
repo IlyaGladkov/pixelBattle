@@ -3,16 +3,6 @@ const express = require('express');
 
 const NUMBER_CELLS = 1024
 const SIZE_CELL = 10
-const PIXELS_COLOR = {
-    0: 'violet',
-    1: 'blue',
-    2: 'green',
-    3: 'yellow',
-    4: 'orange',
-    5: 'red',
-    6: 'white',
-    7: 'black'
-}
 
 let app = express();
 
@@ -34,7 +24,8 @@ app.get('/', async function (req, res, next) {
 function createMatrix(sizeCell, sizeMatrix) {
     let matrix = {
 		cells: [],
-		status: 200
+        numberCells: NUMBER_CELLS,
+        sizeCells: SIZE_CELL
 	}
     let lastX = 0;
     let lastY = 0;
@@ -62,7 +53,7 @@ function createMatrix(sizeCell, sizeMatrix) {
 
 let defaultMatrix = createMatrix(SIZE_CELL, NUMBER_CELLS)
 
-app.ws('/', function (ws, req) {
+app.ws('/', function(ws, req) {
 	ws.on('message', function(msg) {
 		let pickedPixel = JSON.parse(msg)
 

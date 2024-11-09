@@ -1,10 +1,10 @@
 const width = window.innerWidth
 const height = window.innerHeight
-const SIZE_CELL = 10
 const STROKE_WIDTH = 0.5
-const NUMBER_CELLS = 150
 
-let pickedColor = null
+let pickedColor = undefined
+let SIZE_CELL
+let NUMBER_CELLS
 
 // creation stage and layer
 const stage = new Konva.Stage({
@@ -47,7 +47,10 @@ socket.onclose = function (event) {
     alert('Код: ' + event.code + ' причина: ' + event.reason)
 }
 
+//create matrix with konva
 socket.onmessage = function(event) {
+  SIZE_CELL = JSON.parse(event.data).sizeCells
+  NUMBER_CELLS = JSON.parse(event.data).numberCells
   let dataMatrix = JSON.parse(event.data).cells
   for (let { x, y, color } of dataMatrix) {
     let newCell = new Konva.Rect({
@@ -82,7 +85,7 @@ socket.onmessage = function(event) {
   }
 }
 
-//create matrix with konva
+// wheel event
 let scale = 1
 
 stage.addEventListener('wheel', function (e) {
@@ -98,6 +101,7 @@ stage.addEventListener('wheel', function (e) {
   })
 })
 
+// active or not palette 
 let palette = document.querySelector('.palette')
 let paletteColor = document.querySelectorAll('.palette-color')
 palette.addEventListener('click', function (e) {
