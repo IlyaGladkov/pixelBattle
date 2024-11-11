@@ -47,12 +47,9 @@ socket.onclose = function (event) {
     alert('Код: ' + event.code + ' причина: ' + event.reason)
 }
 
-//create matrix with konva
-socket.onmessage = function(event) {
-  SIZE_CELL = JSON.parse(event.data).sizeCells
-  NUMBER_CELLS = JSON.parse(event.data).numberCells
-  let dataMatrix = JSON.parse(event.data).cells
-  for (let { x, y, color } of dataMatrix) {
+function createPull(data) {
+  matrix.destroyChildren()
+  for (let { x, y, color } of data) {
     let newCell = new Konva.Rect({
       x: x,
       y: y,
@@ -83,6 +80,14 @@ socket.onmessage = function(event) {
   
     matrix.add(newCell)
   }
+}
+
+//create matrix with konva
+socket.onmessage = function(event) {
+  SIZE_CELL = JSON.parse(event.data).sizeCells
+  NUMBER_CELLS = JSON.parse(event.data).numberCells
+  let dataMatrix = JSON.parse(event.data).cells
+  createPull(dataMatrix)
 }
 
 // wheel event

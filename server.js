@@ -11,22 +11,21 @@ let expressWs = require('express-ws')(app);
 app.use(express.static('public'))
 
 app.get('/', async function (req, res, next) {
-	console.log('get route', req.testing);
-	try {
-		let data = await fs.promises.readFile('index.html', 'utf8')
-		res.send(data)
-	} catch (err) {
-		console.log('что-то пошло не так')
-	}
-	res.end()
+    try {
+        let data = await fs.promises.readFile('index.html', 'utf8')
+        res.send(data)
+    } catch (err) {
+        console.log('что-то пошло не так')
+    }
+    res.end()
 })
 
 function createMatrix(sizeCell, sizeMatrix) {
     let matrix = {
-		cells: [],
+        cells: [],
         numberCells: NUMBER_CELLS,
         sizeCells: SIZE_CELL
-	}
+    }
     let lastX = 0;
     let lastY = 0;
     let numberCell = sizeMatrix / sizeCell
@@ -52,22 +51,29 @@ function createMatrix(sizeCell, sizeMatrix) {
 }
 
 let defaultMatrix = createMatrix(SIZE_CELL, NUMBER_CELLS)
+let clients = {}
 
-app.ws('/', function(ws, req) {
-	ws.on('message', function(msg) {
-		let pickedPixel = JSON.parse(msg)
+app.ws('/', function (ws, req) {
+    let id = Math.floor(Math.random() * 1000)
+    clients[id] = ws
 
-		defaultMatrix.cells = defaultMatrix.cells.map((cell) => {
-			if (cell.x === pickedPixel.x && cell.y === pickedPixel.y) {
-				return {
-					...cell,
-					color: pickedPixel.color
-				}
-			}
-			return cell
-		})
-	})
-	ws.send(JSON.stringify(defaultMatrix))
-});
+    ws.on('message', function (msg) {
+        let pickedPixel = JSON.parse(msg)
+
+        defaultMatrix.cells = defaultMatrix.cells.map((cell) => {
+            if (cell.x === pickedPixel.x && cell.y === pickedPixel.y) {
+                return {
+                    ...cell,
+                    color: pickedPixel.color
+                }
+           }
+            return cell
+        })
+        for (let id in clients) {
+            clients[id].send(JSON.stringify(defaultMatrix))
+        }
+    })
+    ws.send(JSON.stringify(defaultMatrix))
+})
 
 app.listen(3000);
