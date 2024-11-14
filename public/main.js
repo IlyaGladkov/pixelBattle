@@ -2,7 +2,7 @@ const width = window.innerWidth
 const height = window.innerHeight
 const STROKE_WIDTH = 0.5
 
-let pickedColor = undefined
+let pickedColor = 'white'
 let SIZE_CELL
 let NUMBER_CELLS
 
@@ -59,7 +59,7 @@ function createPull(data) {
     })
   
     newCell.addEventListener('click', function () {
-      if (pickedColor) this.fill(pickedColor)
+      if (pickedColor !== undefined) this.fill(pickedColor)
       
       socket.send(JSON.stringify({
         x: this.attrs.x,

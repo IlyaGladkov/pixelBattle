@@ -11,14 +11,14 @@
 <body>
     <div class="palette">
         <div>
+            <div class="palette-color white active" data-color="white"></div>
+            <div class="palette-color black" data-color="black"></div>
             <div class="palette-color violet" data-color="violet"></div>
             <div class="palette-color blue" data-color="blue"></div>
             <div class="palette-color green" data-color="green"></div>
             <div class="palette-color yellow" data-color="yellow"></div>
             <div class="palette-color orange" data-color="orange"></div>
             <div class="palette-color red" data-color="red"></div>
-            <div class="palette-color white" data-color="white"></div>
-            <div class="palette-color black" data-color="black"></div>
         </div>
     </div>
     <div id="container"></div>
@@ -63,7 +63,7 @@
         }
 
         .active {
-            border: 2px solid white
+            border: 2px solid rgb(11, 242, 30)
         }
 
         .palette-color:first-child {
@@ -71,7 +71,7 @@
         }
 
         .palette-color:hover {
-            border: 2px solid white
+            opacity: 20%;
         }
 
         .violet {
