@@ -103,7 +103,7 @@ socket.onmessage = function(event) {
 // wheel event
 let scale = 1
 
-stage.on('wheel', function (e) {
+stage.addEventListener('wheel', function (e) {
   e.preventDefault()
 
   scale += e.deltaY * -0.01
