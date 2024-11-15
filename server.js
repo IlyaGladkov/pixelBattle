@@ -1,7 +1,7 @@
 const fs = require('fs')
 const express = require('express');
 
-const NUMBER_CELLS = { columns: 1000, rows: 800}
+const NUMBER_CELLS = { columns: 100, rows: 80}
 const SIZE_CELL = 10
 
 let app = express();

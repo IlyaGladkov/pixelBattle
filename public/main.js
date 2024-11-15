@@ -31,6 +31,17 @@ let matrix = new Konva.Group({
   offset: { x: NUMBER_CELLS / 2, y: NUMBER_CELLS / 2 }
 })
 
+matrix.on('click', function (e) {
+  console.log(e.target)
+  if (pickedColor !== undefined) e.target.fill(pickedColor)
+
+  socket.send(JSON.stringify({
+    x: e.target.attrs.x,
+    y: e.target.attrs.y,
+    color: pickedColor
+  }))
+})
+
 // WebSocket 
 let socket = new WebSocket("ws://localhost:3000")
 
@@ -57,27 +68,17 @@ function createPull(data) {
       height: SIZE_CELL - STROKE_WIDTH,
       fill: color
     })
-  
-    newCell.addEventListener('click', function () {
-      if (pickedColor !== undefined) this.fill(pickedColor)
-      
-      socket.send(JSON.stringify({
-        x: this.attrs.x,
-        y: this.attrs.y,
-        color: pickedColor
-      }))
-    })
-  
-    newCell.addEventListener('mouseover', function () {
+
+    newCell.on('mouseover', function () {
       this.stroke('white');
       this.strokeWidth(STROKE_WIDTH);
     })
-  
-    newCell.addEventListener('mouseout', function () {
+
+    newCell.on('mouseout', function () {
       this.stroke('');
       this.strokeWidth(0);
     })
-  
+
     matrix.add(newCell)
   }
 }
@@ -93,7 +94,7 @@ socket.onmessage = function(event) {
 // wheel event
 let scale = 1
 
-stage.addEventListener('wheel', function (e) {
+stage.on('wheel', function (e) {
   e.preventDefault()
 
   scale += e.deltaY * -0.01
