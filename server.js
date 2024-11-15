@@ -1,7 +1,7 @@
 const fs = require('fs')
 const express = require('express');
 
-const NUMBER_CELLS = 1024
+const NUMBER_CELLS = { columns: 1000, rows: 800}
 const SIZE_CELL = 10
 
 let app = express();
@@ -26,23 +26,20 @@ function createMatrix(sizeCell, sizeMatrix) {
         numberCells: NUMBER_CELLS,
         sizeCells: SIZE_CELL
     }
-    let lastX = 0;
-    let lastY = 0;
-    let numberCell = sizeMatrix / sizeCell
+    let lastX = 0
+    let lastY = 0
+    let { columns, rows } = sizeMatrix
 
-    for (let posY = 0; posY < numberCell; posY++) {
-        for (let posX = 0; posX < numberCell; posX++) {
+    for (let posY = 0; posY < rows; posY++) {
+        for (let posX = 0; posX < columns; posX++) {
             let cell = {
                 x: lastX,
                 y: lastY,
                 color: 'white'
             }
             matrix.cells.push(cell)
-            if (lastX < sizeMatrix - sizeCell) {
-                lastX = lastX + sizeCell
-            } else {
-                lastX = 0
-            }
+            lastX += sizeCell
+            if (lastX >= columns * 10) lastX = 0
         }
         lastY += sizeCell
     }
