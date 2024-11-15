@@ -27,8 +27,17 @@ const layer = new Konva.Layer()
 
 let matrix = new Konva.Group({
   x: width / 1.3,
-  y: height / 2,
-  offset: { x: NUMBER_CELLS / 2, y: NUMBER_CELLS / 2 }
+  y: height / 2
+})
+
+matrix.on('click', function (e) {
+  if (pickedColor !== undefined) e.target.fill(pickedColor)
+
+  socket.send(JSON.stringify({
+    x: e.target.attrs.x,
+    y: e.target.attrs.y,
+    color: pickedColor
+  }))
 })
 
 // WebSocket 
@@ -57,27 +66,17 @@ function createPull(data) {
       height: SIZE_CELL - STROKE_WIDTH,
       fill: color
     })
-  
-    newCell.addEventListener('click', function () {
-      if (pickedColor !== undefined) this.fill(pickedColor)
-      
-      socket.send(JSON.stringify({
-        x: this.attrs.x,
-        y: this.attrs.y,
-        color: pickedColor
-      }))
-    })
-  
-    newCell.addEventListener('mouseover', function () {
+
+    newCell.on('mouseover', function () {
       this.stroke('white');
       this.strokeWidth(STROKE_WIDTH);
     })
-  
-    newCell.addEventListener('mouseout', function () {
+
+    newCell.on('mouseout', function () {
       this.stroke('');
       this.strokeWidth(0);
     })
-  
+
     matrix.add(newCell)
   }
 }
