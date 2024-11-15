@@ -40,6 +40,17 @@ matrix.on('click', function (e) {
   }))
 })
 
+matrix.on('click', function (e) {
+  console.log(e.target)
+  if (pickedColor !== undefined) e.target.fill(pickedColor)
+
+  socket.send(JSON.stringify({
+    x: e.target.attrs.x,
+    y: e.target.attrs.y,
+    color: pickedColor
+  }))
+})
+
 // WebSocket 
 let socket = new WebSocket("ws://localhost:3000")
 
@@ -92,7 +103,7 @@ socket.onmessage = function(event) {
 // wheel event
 let scale = 1
 
-stage.addEventListener('wheel', function (e) {
+stage.on('wheel', function (e) {
   e.preventDefault()
 
   scale += e.deltaY * -0.01
