@@ -101,22 +101,29 @@ socket.onmessage = function(event) {
 }
 
 // wheel event
-let scale = 1
-
 stage.addEventListener('wheel', function (e) {
   e.preventDefault()
 
-  scale += e.deltaY * -0.01
+  const scaleBy = 1.1
+  const oldScale = stage.scaleX()
+  const mousePointTo = {
+    x: stage.getPointerPosition().x / oldScale - stage.x() / oldScale,
+    y: stage.getPointerPosition().y / oldScale - stage.y() / oldScale
+  }
+  const newScale = e.deltaY > 0 ? oldScale / scaleBy : oldScale * scaleBy;
 
-  if (scale <= 0.125) scale = 0.125
+  stage.scale({ x: newScale, y: newScale });
 
-  matrix.scale({
-    x: scale,
-    y: scale
-  })
+  const newPos = {
+    x: -(mousePointTo.x - stage.getPointerPosition().x / newScale) * newScale,
+    y: -(mousePointTo.y - stage.getPointerPosition().y / newScale) * newScale,
+  };
+  stage.position(newPos);
+
+  stage.batchDraw();
 })
 
-// active or not palette 
+// active or not palette
 let palette = document.querySelector('.palette')
 let paletteColor = document.querySelectorAll('.palette-color')
 palette.addEventListener('click', function (e) {
